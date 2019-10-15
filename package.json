@@ -1,0 +1,8 @@
+{
+  "name": "wireless-uart",
+  "description": "LINBLEによるUART無線化のためのセントラルアプリサンプルコード",
+  "author": "Musen Connect, Inc.",
+  "devDependencies": {
+    "docsify-cli": "^4.3.0"
+  }
+}
