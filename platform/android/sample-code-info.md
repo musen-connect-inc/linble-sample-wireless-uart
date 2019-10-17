@@ -14,6 +14,21 @@
 
 * 実際に参考にすべきコードは[`app/src/main/java/com.musenconnect.linble.sample.wirelessuart.android/`]( https://github.com/musen-connect-inc/linble-sample-wireless-uart-android/tree/master/app/src/main/java/com/musenconnect/linble/sample/wirelessuart/android )内に配置されています。
 
+### 接続対象BDアドレスの変更
+
+アプリをビルドする前に、[`WirelessUartController`クラス内の`defaultTargetLinbleAddress`の文字列]( https://github.com/musen-connect-inc/linble-sample-wireless-uart-android/blob/master/app/src/main/java/com/musenconnect/linble/sample/wirelessuart/android/common/WirelessUartController.kt#L16 )を適切に変更してください。
+
+```kotlin
+companion object {
+    val defaultTargetLinbleAddress: String = "FFFFFFFFFFFF" // `BTM` コマンドで確認できるBDアドレス文字列をここに貼り付けてください。
+        .insertColons()
+}
+```
+
+この文字列は接続対象のBDアドレスとして使用されます。
+コメントでも書いている通り、`BTM`コマンドによって取得できた文字列をここにセットしてください。
+
+
 
 ## パッケージ構造
 
