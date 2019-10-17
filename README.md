@@ -9,7 +9,7 @@
 各プラットフォームごとにリポジトリを用意しています。
 ご希望のものをローカルPC環境へクローンし、各開発環境を通じてビルド・インストールを行ってください。
 
-* Android(10月下旬までに公開予定)
+* [Android]( https://github.com/musen-connect-inc/linble-sample-wireless-uart-android )
 * iOS(公開時期未定)
 * Windows10-UWP(公開時期未定)
 
