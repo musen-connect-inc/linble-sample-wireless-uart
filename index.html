@@ -12,12 +12,21 @@
   <style>
     :root {
       --base-font-size: 14px;
+      --modular-scale: 1.1;
 
       --theme-hue: 47;
       --theme-saturation: 100%;
       --theme-lightness: 49%;
       --theme-color: hsl(var(--theme-hue), var(--theme-saturation), var(--theme-lightness));
       --selection-color: #ffefba;
+
+      --heading-h3-border-width: 0 0 2px 0;
+      --heading-h3-border-style: solid;
+      --heading-h3-border-color: var(--mono-tint3);
+
+      --heading-h4-border-width: 0 0 1px 0;
+      --heading-h4-border-style: solid;
+      --heading-h4-border-color: var(--mono-tint3);
 
       --table-head-background: #fffad1;
       --table-row-odd-background: #ffffff;
@@ -91,6 +100,7 @@
   <script src="//unpkg.com/docsify/lib/plugins/zoom-image.min.js"></script>
   <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0"></script>
+  <script src="//unpkg.com/prismjs/components/prism-kotlin.min.js"></script>
 </body>
 
 </html>

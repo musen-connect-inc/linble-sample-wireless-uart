@@ -1,4 +1,4 @@
-# 前書き
+# BLEとLINBLEの基本制御フロー: 前書き
 
 {docsify-updated}
 

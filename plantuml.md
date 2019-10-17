@@ -597,7 +597,7 @@ destroy Linble
 
 
 
-### BLE制御構造およびアプリ上位層との関わり
+### BLE制御構造
 
 
 ```plantuml
