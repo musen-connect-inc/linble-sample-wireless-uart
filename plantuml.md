@@ -73,7 +73,6 @@ mainframe BLE制御開始シーケンス
 
 participant ": Application" as Application #ffe0e0
 participant ": WirelessUartController" as WirelessUartController
-participant "current\n: Advertisement" as Advertisement #e0f4ff
 participant ": BluetoothCentralController" as BluetoothCentralController #e0f4ff
 
 autonumber
