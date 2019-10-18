@@ -16,3 +16,7 @@
 ## サンプルコードの解説
 
 [BLEとLINBLEの基本制御フロー](common/flows/introduction.md)を参照してください。
+
+## お問い合わせ
+
+株式会社ムセンコネクト: https://www.musen-connect.co.jp/contact
