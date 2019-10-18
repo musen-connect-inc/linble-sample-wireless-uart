@@ -9,7 +9,7 @@
 
 ### LINBLEへのデータ送信 - Write
 
-Write操作では、[GATT準備](common/flows/preapre-gatt.md)によって取得していた`Data To Peripheral`キャラクタリスティックを使用します。
+Write操作では、[GATT準備](common/flows/prepare-gatt.md)によって取得していた`Data To Peripheral`キャラクタリスティックを使用します。
 このキャラクタリスティックに機器へ送り込みたいバイト列データを書き込めば、すぐにLINBLEをまたいだUART出力が発生します。
 
 ただし、Writeするデータサイズについて注意しなければならないことがあります。
