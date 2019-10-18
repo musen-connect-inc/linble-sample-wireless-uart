@@ -274,7 +274,6 @@ mainframe サービス・キャラクタリスティックの検索
 
 participant ": WirelessUartController" as WirelessUartController
 participant "connected\n: Linble" as Linble #e0f4ff
-participant ": BluetoothCentralController" as BluetoothCentralController #e0f4ff
 
 autonumber
 
@@ -344,7 +343,6 @@ mainframe DataFromPeripheralに対するNotificationの許可
 
 participant ": WirelessUartController" as WirelessUartController
 participant "connected\n: Linble" as Linble #e0f4ff
-participant ": BluetoothCentralController" as BluetoothCentralController #e0f4ff
 
 autonumber
 
