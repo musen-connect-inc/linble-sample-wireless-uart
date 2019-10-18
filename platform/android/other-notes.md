@@ -1,4 +1,4 @@
-# Android版サンプルコード - サンプルコードの流れ: その他特記事項
+# Android版サンプルコード - その他特記事項
 
 {docsify-updated}
 
