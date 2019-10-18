@@ -8,7 +8,7 @@
     * [GATT準備](platform/android/prepare-gatt.md "Android版サンプルコード - GATT準備")
     * [LINBLEとの双方向通信](platform/android/communicate-with-linble.md "Android版サンプルコード - LINBLEとの双方向通信")
     * [BLE制御の終了](platform/android/stop-all-controls.md "Android版サンプルコード - BLE制御の終了")
-* [その他特記事項](platform/android/other-notes.md "Android版サンプルコード - その他特記事項")
+    * [その他特記事項](platform/android/other-notes.md "Android版サンプルコード - その他特記事項")
 
 
 ---
