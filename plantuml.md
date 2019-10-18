@@ -572,6 +572,11 @@ autonumber
 Application -> WirelessUartController: stop()
 activate WirelessUartController
 
+WirelessUartController -> BluetoothCentralController: stopDeviceBluetoothStateMonitoring()
+activate BluetoothCentralController
+BluetoothCentralController ->]: Bluetooth状態監視を停止
+deactivate BluetoothCentralController
+
 WirelessUartController -> BluetoothCentralController: cancelScan()
 activate BluetoothCentralController
 BluetoothCentralController ->]: スキャン停止

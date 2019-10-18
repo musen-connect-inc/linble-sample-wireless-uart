@@ -6,6 +6,8 @@
 > 
 > ![](../../out/plantuml/sequence_stop.png)
 
+Bluetooth状態の監視を停止するためには、ブロードキャスト購読を解除すればよいので、[`Context.unregisterReceiver()`]( https://developer.android.com/reference/android/content/Context#unregisterReceiver(android.content.BroadcastReceiver) )を呼び出します。
+
 BLEスキャンを停止するためには、[`BluetoothLeScanner.stopScan()`]( https://developer.android.com/reference/android/bluetooth/le/BluetoothLeScanner.html#stopScan(android.bluetooth.le.ScanCallback) )を呼び出します。
 このとき、スキャン開始のために使用した`ScanCallback`を渡す必要があります。
 
