@@ -15,7 +15,7 @@
 
 ## AndroidでのBLE接続は失敗しやすい
 
-Android端末にもよりますが、**`BluetoothGatt.connectGatt()`は比較的高い頻度で失敗します**。
+Android端末にもよりますが、<u>**`BluetoothGatt.connectGatt()`は比較的高い頻度で失敗します**</u>。
 
 何回かリトライを行えば何事もなかったかのように正常に接続できることが常ですので、リトライ用のロジックは必ず搭載すべきです。
 
@@ -23,11 +23,3 @@ Android端末にもよりますが、**`BluetoothGatt.connectGatt()`は比較的
 
 !> `onConnectionStateChange()`では接続失敗に関するエラーコードも回収できます。しかし、残念ながらほとんどのエラーが`133`という汎用エラーコードで通知されるようになっており、あまり参考にはなりません。
 
-
-## BluetoothGattCallbackは後から差し替えできない
-
-`BluetoothGattCallback`は、今後に続く様々なBLE制御の処理結果をアプリ側へ通知するために、Android BLEフレームワーク側で使用され続けます。
-
-一方、BLE制御というものは[基本制御フロー]( common/flows/introduction.md )で説明してきた通り、「接続」「GATT準備」「双方向通信」のような複数の制御のステップから成り立ちます。1つのイベントハンドラを複数のステップで横断的に使用することになるため、アプリ開発が進むにつれて、コードの見通しがすぐに悪くなってしまいます。
-
-サンプルコードではこの問題を解消するため、`BluetoothGattCallback`をObserverパターンのように使用できる`BluetoothGattCallbackBridger`クラスを新設して使っています。これにより各ステップでは、各ステップごとに関心のある`BluetoothGattCallback`内イベントを購読管理できるようになっており、見通しの良さが確保されています。

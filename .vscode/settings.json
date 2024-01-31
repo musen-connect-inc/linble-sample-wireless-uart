@@ -1,0 +1,4 @@
+{
+  "plantuml.commandArgs": ["-DPLANTUML_LIMIT_SIZE=8192"],
+  "plantuml.jarArgs": ["-Sdpi=200"]
+}

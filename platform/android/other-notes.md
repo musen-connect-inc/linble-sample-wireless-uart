@@ -11,23 +11,20 @@
 サンプルコードでは毎回以下のようなコードスニペットでタイムアウト管理をしています。
 
 ```kotlin
-// コールバック対応の登録
-bluetoothGattCallbackBridger.register(object : BluetoothGattCallback() {
-    override fun onSomeEvent(gatt: BluetoothGatt?) {
-        gattOperationTimeoutDetector?.cancel()  // タイマー解除
-        bluetoothGattCallbackBridger.unregister(this)   // コールバック対応の解除
+// BluetoothGattCallback呼び出し
+override fun onSomeEvent(gatt: BluetoothGatt?) {
+    linbleSetupTimeoutDetector?.cancel()  // タイマー解除
 
-        // ...
-    }
-})
+    // ...
+}
 
-gattOperationTimeoutDetector = Timer().schedule(gattOperationTimeoutMillis) {
+linbleSetupTimeoutDetector = Timer().schedule(gattOperationTimeoutMillis) {
     // TODO: タイムアウトエラー処理
 }
 
 val succeeded = gatt.executeSomeOperation()
 if (!succeeded) {
-    gattOperationTimeoutDetector?.cancel()  // タイマー解除
+    linbleSetupTimeoutDetector?.cancel()  // タイマー解除
 
     // TODO: GATT操作失敗時の処理
 }

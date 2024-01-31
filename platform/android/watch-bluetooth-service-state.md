@@ -11,8 +11,8 @@ AndroidでBluetooth状態の監視を行う場合、[ブロードキャスト]( 
 
 ## 位置情報機能の状態確認も必要
 
-ただし、**Android6以降でBLEスキャンを利用するためには、位置情報機能が有効になっている必要があります。**
-昨今のAndroid BLEアプリでは、位置情報機能の状態確認についても同時に行われるべきです。
+ただし、**Android6以降〜Android12未満でBLEスキャンを利用するためには、位置情報機能が有効になっている必要があります。**
+このあたりのOSバージョンをサポートしようとする場合は、位置情報機能の状態確認についても同時に行われるべきです。
 
 Bluetooth機能の状態が変更されると、`BluetoothAdapter.ACTION_STATE_CHANGED`がブロードキャストされます。位置情報機能の状態が変更されると、`LocationManager.PROVIDERS_CHANGED_ACTION`がブロードキャストされます。
 
@@ -32,25 +32,19 @@ private fun updateCurrentDeviceBluetoothState(context: Context) {
     val bluetoothIsPoweredOn = BluetoothAdapter.getDefaultAdapter().isEnabled
 
     currentDeviceBluetoothState = if (bluetoothIsPoweredOn) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            /*
-            Android6以降では、位置情報機能が有効になっているかもBLEスキャンの利用可否に繋がります。
-
-            `LocationManager.NETWORK_PROVIDER` が有効になっていれば、BLEスキャンを利用可能と見なすことができます。
-            */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            DeviceBluetoothState.PoweredOn
+        } else {
+            // 古い OS をサポートする場合、
+            // 位置情報機能が ON になっていることも確認します
             val locationManager = context.getSystemService(LocationManager::class.java)
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 DeviceBluetoothState.PoweredOn
-            }
-            else {
+            } else {
                 DeviceBluetoothState.PoweredOnButDisabledLocationService
             }
         }
-        else {
-            DeviceBluetoothState.PoweredOn
-        }
-    }
-    else {
+    } else {
         DeviceBluetoothState.PoweredOff
     }
 }

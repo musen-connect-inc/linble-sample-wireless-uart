@@ -1,14 +1,14 @@
-# 資料内で使用するPlantUML図
+# 資料内で使用する PlantUML 図
 
-資料に使用する全てのPlantUMLソースコードを、コードブロックで記述します。
+資料に使用する全ての PlantUML ソースコードを、コードブロックで記述します。
 
-!> **本ファイルは資料開発者向けに用意しているものです。PlantUMLのオンラインレンダリングサービスへの負荷となってしまうため、このページへのGitHub Pagesからのアクセスが行われないようにしてください。**
+!> **本ファイルは資料開発者向けに用意しているものです。PlantUML のオンラインレンダリングサービスへの負荷となってしまうため、このページへの GitHub Pages からのアクセスが行われないようにしてください。**
 
 ### 開発者向け情報
 
-* 普段は[Markdown Preview Enhanced](https://shd101wyy.github.io/markdown-preview-enhanced/)からレンダリング後のPlantUML図を確認しながら開発します。
-* 図の調整が終わり次第、VSCodeの[PlantUMLプラグイン](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml)で「ファイル内のダイアグラムをエクスポート」を使って、pngファイルへの一括ビルドを行ってください。
-* [PlantUML公式のレンダリングWeb API](http://plantuml.com/ja/)には転送量制限があるため、開発中の積極使用は避け、ローカルの `plantuml.jar` が使用されるように設定してください。
+- 普段は[Markdown Preview Enhanced](https://shd101wyy.github.io/markdown-preview-enhanced/)からレンダリング後の PlantUML 図を確認しながら開発します。
+- 図の調整が終わり次第、VSCode の[PlantUML プラグイン](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml)で「ファイル内のダイアグラムをエクスポート」を使って、png ファイルへの一括ビルドを行ってください。
+- [PlantUML 公式のレンダリング Web API](http://plantuml.com/ja/)には転送量制限があるため、開発中の積極使用は避け、ローカルの `plantuml.jar` が使用されるように設定してください。
 
 ## PlantUML
 
@@ -27,8 +27,6 @@ Controller <==> Target: "UART通信"
 @enduml
 ```
 
-
-
 ### 概略クラス図
 
 ```plantuml
@@ -46,7 +44,7 @@ interface Application #ffe0e0
 class WirelessUartController #fefece {
 }
 
-interface BluetoothCentralController #e0f4ff {
+class BluetoothCentralController #e0f4ff {
 }
 
 interface "BLE API" as BLEAPI <<Platform SDK>>  #dddddd {
@@ -62,9 +60,7 @@ WirelessUartController .r.> UartCommand: <<use>>
 @enduml
 ```
 
-
-
-### BLE制御開始シーケンス
+### BLE 制御開始シーケンス
 
 ```plantuml
 @startuml sequence_start
@@ -104,7 +100,6 @@ end
 
 @enduml
 ```
-
 
 ### スキャン開始シーケンス
 
@@ -157,8 +152,7 @@ end
 @enduml
 ```
 
-
-## 接続対象とのBLE接続シーケンス
+## 接続対象との BLE 接続シーケンス
 
 ```plantuml
 @startuml sequence_connection
@@ -166,7 +160,6 @@ end
 mainframe 接続対象とのBLE接続シーケンス
 
 participant ": WirelessUartController" as WirelessUartController
-participant "connected\n: Linble" as Linble #e0f4ff
 participant ": BluetoothCentralController" as BluetoothCentralController #e0f4ff
 
 autonumber
@@ -196,17 +189,7 @@ deactivate WirelessUartController
 
 end
 
-create Linble
-BluetoothCentralController -> Linble: <<create>>
-activate Linble
-
-BluetoothCentralController -> WirelessUartController: onSuccess(connected)
-activate WirelessUartController #e7d9ff
-
-ref over WirelessUartController,Linble,BluetoothCentralController: GATT準備シーケンス
-
-deactivate WirelessUartController
-
+ref over WirelessUartController,BluetoothCentralController: GATT準備シーケンス
 
 deactivate WirelessUartController
 
@@ -215,13 +198,9 @@ deactivate BluetoothCentralController
 @enduml
 ```
 
+### GATT 準備シーケンス
 
-
-
-
-### GATT準備シーケンス
-
-#### GATTとは
+#### GATT とは
 
 ```plantuml
 @startuml classes_what_is_gatt
@@ -263,8 +242,6 @@ GattProfile -[hidden]- GattCharacteristic
 @enduml
 ```
 
-
-
 #### サービス・キャラクタリスティックの検索
 
 ```plantuml
@@ -273,68 +250,60 @@ GattProfile -[hidden]- GattCharacteristic
 mainframe サービス・キャラクタリスティックの検索
 
 participant ": WirelessUartController" as WirelessUartController
-participant "connected\n: Linble" as Linble #e0f4ff
+participant ":BluetoothCentralController" as BluetoothCentralController #e0f4ff
 
 autonumber
 
 ==サービス検索==
 
 activate WirelessUartController #dac4ff
-WirelessUartController -> Linble: discoverServices()
-activate Linble
-Linble ->]: サービス検索
+activate BluetoothCentralController
+BluetoothCentralController ->]: サービス検索
 
 ...
 
-Linble <-]: サービス検索結果通知
+BluetoothCentralController <-]: サービス検索結果通知
 
 break 失敗時
 
-WirelessUartController <- Linble: onError(失敗理由)
+WirelessUartController <- BluetoothCentralController: onError(失敗理由)
 activate WirelessUartController #e7d9ff
 note over WirelessUartController #ffb3b3: 切断し、\nスキャンからやり直す
 deactivate WirelessUartController
 
 
 end
-
-WirelessUartController <- Linble: onSuccess(this)
-activate WirelessUartController #e7d9ff
 
 ==キャラクタリスティック検索==
 
-WirelessUartController -> Linble: discoverCharacteristics()
-activate Linble
-Linble ->]: キャラクタリスティック検索
-deactivate WirelessUartController
-
-deactivate Linble
+activate BluetoothCentralController
+BluetoothCentralController ->]: キャラクタリスティック検索
 
 ...
 
-Linble <-]: キャラクタリスティック検索結果通知
+BluetoothCentralController <-]: キャラクタリスティック検索結果通知
+
+
 
 break 失敗時
 
-WirelessUartController <- Linble: onError(失敗理由)
+WirelessUartController <- BluetoothCentralController: onError(失敗理由)
 activate WirelessUartController #e7d9ff
 note over WirelessUartController #ffb3b3: 切断し、\nスキャンからやり直す
 deactivate WirelessUartController
 
 end
 
-note over Linble: LINBLE GATT Serviceの\nキャラクタリスティックオブジェクトを\n保持
+note over BluetoothCentralController: BluetoothCentralController GATT Serviceの\nキャラクタリスティックオブジェクトを\n保持
 
-WirelessUartController <- Linble: onSuccess(this)
 activate WirelessUartController #e7d9ff
 
-ref over WirelessUartController, Linble: DataFromPeripheralに対するNotificationの許可
+ref over WirelessUartController, BluetoothCentralController: DataFromPeripheralに対するNotificationの許可
 
 @enduml
 ```
 
-
-#### DataFromPeripheralに対するNotificationの許可
+#### DataFromPeripheral に対する Notification の許可
 
 ```plantuml
 @startuml sequence_enable_notification_from_dfp
@@ -342,42 +311,36 @@ ref over WirelessUartController, Linble: DataFromPeripheralに対するNotificat
 mainframe DataFromPeripheralに対するNotificationの許可
 
 participant ": WirelessUartController" as WirelessUartController
-participant "connected\n: Linble" as Linble #e0f4ff
+participant ": BluetoothCentralController" as BluetoothCentralController #e0f4ff
 
 autonumber
 
 ==Notification許可==
 activate WirelessUartController #dac4ff
 
-WirelessUartController -> Linble: enableNotification()
-activate Linble
-Linble ->]: Notification許可
-
-deactivate Linble
+activate BluetoothCentralController
+BluetoothCentralController ->]: Notification許可
 
 ...
 
-Linble <-]: Notification許可結果通知
+BluetoothCentralController <-]: Notification許可結果通知
 
 break 失敗時
 
-WirelessUartController <- Linble: onError(失敗理由)
+WirelessUartController <- BluetoothCentralController: onError(失敗理由)
 activate WirelessUartController #e7d9ff
 note over WirelessUartController #ffb3b3: 切断し、\nスキャンからやり直す
 deactivate WirelessUartController
 
 end
 
-WirelessUartController <- Linble: onSuccess(this)
+WirelessUartController <- BluetoothCentralController: onComplete()
 activate WirelessUartController #e7d9ff
 
-note over WirelessUartController, Linble: LINBLEとの双方向通信を開始
+note over WirelessUartController, BluetoothCentralController: BluetoothCentralControllerとの双方向通信を開始
 
 @enduml
 ```
-
-
-
 
 ### データ送信シーケンス
 
@@ -390,7 +353,7 @@ participant ": Application" as Application #ffe0e0
 participant "command\n: UartCommand" as UartCommand #ccffd5
 participant ": WirelessUartController" as WirelessUartController
 participant ": TxPacketDivider" as TxPacketDivider
-participant "connected\n: Linble" as Linble #e0f4ff
+participant ": BluetoothCentralController" as BluetoothCentralController #e0f4ff
 
 autonumber
 
@@ -419,19 +382,19 @@ autonumber stop
 return MTU分割バイト列
 autonumber resume
 
-WirelessUartController -> Linble: write(MTU分割バイト列)
-activate Linble
-Linble ->]: データ送信(dataToPeripheral, MTU分割バイト列)
-deactivate Linble
+WirelessUartController -> BluetoothCentralController: write(MTU分割バイト列)
+activate BluetoothCentralController
+BluetoothCentralController ->]: データ送信(dataToPeripheral, MTU分割バイト列)
+deactivate BluetoothCentralController
 
 deactivate WirelessUartController
 
-Linble <-]: 送信結果通知
-activate Linble
+BluetoothCentralController <-]: 送信結果通知
+activate BluetoothCentralController
 
 break 失敗時
 
-WirelessUartController <- Linble: onError(失敗理由)
+WirelessUartController <- BluetoothCentralController: onError(失敗理由)
 activate WirelessUartController #e7d9ff
 autonumber stop
 Application <- WirelessUartController: 書き込み失敗通知
@@ -442,7 +405,7 @@ deactivate WirelessUartController
 
 end
 
-WirelessUartController <- Linble: onSuccess(this)
+WirelessUartController <- BluetoothCentralController: onSuccess()
 activate WirelessUartController #e7d9ff
 
 break 最後の書き込み
@@ -457,16 +420,13 @@ deactivate WirelessUartController
 
 end
 
-deactivate Linble
+deactivate BluetoothCentralController
 destroy TxPacketDivider
 
 @enduml
 ```
 
-
-
-
-### Notification受信シーケンス
+### Notification 受信シーケンス
 
 ```plantuml
 @startuml sequence_handle_notification
@@ -477,20 +437,20 @@ participant ": WirelessUartController" as WirelessUartController
 participant "rxPacket\n: UartRxPacket" as UartRxPacket #f6ff9c
 participant ": UartDataParser" as UartDataParser
 participant "current\n: NotificationEvent" as NotificationEvent #e0f4ff
-participant "connected\n: Linble" as Linble #e0f4ff
+participant ": BluetoothCentralController" as BluetoothCentralController #e0f4ff
 
 autonumber
 
 ...
 
-Linble <-]: データ受信通知
-activate Linble
+BluetoothCentralController <-]: データ受信通知
+activate BluetoothCentralController
 
 create NotificationEvent
-Linble -> NotificationEvent: <<create>>
+BluetoothCentralController -> NotificationEvent: <<create>>
 activate NotificationEvent #e7d9ff
 
-Linble -> WirelessUartController: onNotify(current)
+BluetoothCentralController -> WirelessUartController: onNotify(current)
 activate WirelessUartController #e7d9ff
 
 WirelessUartController -> UartDataParser: parse(current.data)
@@ -511,8 +471,7 @@ destroy NotificationEvent
 @enduml
 ```
 
-
-#### Notification受信データ解析フロー
+#### Notification 受信データ解析フロー
 
 ```plantuml
 @startuml activity_parse_rx_data
@@ -540,7 +499,7 @@ repeat
     :followingのindex=1からlength-1個のデータを取り出し、\nrxPayloadとする;
 
     if (rxTypeと一致するtypeを持つ\nUartRxPacketのサブクラスを特定し、\nそのオブジェクトを生成する) then (rxTypeがどのtypeとも一致しない)
-        
+
     else (else)
         :生成オブジェクトを解析結果として上層へ通知;
     endif
@@ -550,10 +509,7 @@ stop
 @enduml
 ```
 
-
-
-
-## BLE制御の停止
+## BLE 制御の停止
 
 ```plantuml
 @startuml sequence_stop
@@ -563,7 +519,6 @@ mainframe BLE制御の停止シーケンス
 participant ": Application" as Application #ffe0e0
 participant ": WirelessUartController" as WirelessUartController
 participant ": BluetoothCentralController" as BluetoothCentralController #e0f4ff
-participant "connected\n: Linble" as Linble #e0f4ff
 
 autonumber
 
@@ -585,22 +540,14 @@ deactivate BluetoothCentralController
 WirelessUartController -> BluetoothCentralController: cancelConnection()
 activate BluetoothCentralController
 BluetoothCentralController ->]: BLE接続試行をキャンセル
-deactivate BluetoothCentralController
+BluetoothCentralController ->]: 対象とのBLE接続を終了
 
-WirelessUartController -> Linble: cancelConnection()
-activate Linble
-Linble ->]: 対象とのBLE接続を終了
-destroy Linble
+deactivate BluetoothCentralController
 
 @enduml
 ```
 
-
-
-
-
-### BLE制御構造
-
+### BLE 制御構造
 
 ```plantuml
 @startuml classes_ble-control
@@ -644,7 +591,9 @@ interface DeviceBluetoothStateMonitoringCallback #e0f4ff {
     fun onChange(deviceBluetoothState: DeviceBluetoothState)
 }
 
-interface BluetoothCentralController #e0f4ff {
+class BluetoothCentralController #e0f4ff {
+    - dataFromPeripheral: GattCharacteristic?
+    - dataToPeripheral: GattCharacteristic?
     ..端末のBluetooth状態の監視..
     + startDeviceBluetoothStateMonitoring(callback: DeviceBluetoothStateMonitoringCallback)
     + stopDeviceBluetoothStateMonitoring()
@@ -652,8 +601,11 @@ interface BluetoothCentralController #e0f4ff {
     + scanAdvertisements(ScanAdvertisementsCallback)
     + cancelScan()
     ..接続..
-    + connect(target: Advertisement, GattOperationCallback)
+    + connect(target: Advertisement, LinbleSetupCallback)
     + isConnected: Boolean {readonly}
+    ..GATT操作..
+    + write(ByteArray, WriteOperationCallback)
+    ..切断..
     + cancelConnection()
 }
 
@@ -661,30 +613,20 @@ interface ScanAdvertisementsCallback #e0f4ff {
     + didDiscover(Advertisement)
 }
 
-interface GattOperationCallback #e0f4ff {
+interface LinbleSetupCallback #e0f4ff {
     + onError(reason: Exception)
-    + onSuccess(linble: Linble)
+    + onComplete()
+    + onNotify(notificationEvent: NotificationEvent)
+}
+
+interface WriteOperationCallback #e0f4ff {
+    + onError(reason: Exception)
+    + onSuccess()
 }
 
 interface Advertisement #e0f4ff {
     + deviceName: String
     + deviceAddress: String
-}
-
-interface Linble #e0f4ff {
-    - dataFromPeripheral: GattCharacteristic?
-    - dataToPeripheral: GattCharacteristic?
-    ..GATT操作..
-    + discoverServices(GattOperationCallback)
-    + discoverCharacteristics(GattOperationCallback)
-    + enableNotification(GattOperationCallback, NotificationCallback)
-    + write(ByteArray, GattOperationCallback)
-    ..切断..
-    ~ cancelConnection()
-}
-
-interface NotificationCallback #e0f4ff {
-    + onNotify(NotificationEvent)
 }
 
 interface NotificationEvent #e0f4ff {
@@ -701,33 +643,29 @@ UartDataParser --> "0..1" UartDataParserCallback
 WirelessUartController --> "1" UartDataParserCallback
 WirelessUartController --> "1" BluetoothCentralController
 WirelessUartController --> "1" ScanAdvertisementsCallback
-WirelessUartController --> "1" GattOperationCallback: connectCallback
-WirelessUartController --> "1" GattOperationCallback: discoverCallback
-WirelessUartController --> "1" GattOperationCallback: enableNotificationCallback
-WirelessUartController --> "1" NotificationCallback
-WirelessUartController --> "0..1" Linble: connected
+WirelessUartController --> "1" LinbleSetupCallback
+WirelessUartController --> "1" WriteOperationCallback
+DeviceBluetoothStateMonitoringCallback -[hidden]ri- ScanAdvertisementsCallback
+ScanAdvertisementsCallback -[hidden]ri- LinbleSetupCallback
+LinbleSetupCallback -[hidden]ri- WriteOperationCallback
 
-BluetoothCentralController -l-> "1" DeviceBluetoothState: currentDeviceBluetoothState
+DeviceBluetoothState -[hidden]ri- BluetoothCentralController
+DeviceBluetoothStateMonitoringCallback -[hidden]do- DeviceBluetoothState
+BluetoothCentralController -> "1   " DeviceBluetoothState: currentDeviceBluetoothState
 
 BluetoothCentralController -u-> "0..1" DeviceBluetoothStateMonitoringCallback
 BluetoothCentralController -u-> "0..1" ScanAdvertisementsCallback
-BluetoothCentralController -u-> "0..1" GattOperationCallback
+BluetoothCentralController -u-> "0..1" LinbleSetupCallback
+BluetoothCentralController -u-> "0..1" WriteOperationCallback
 BluetoothCentralController ..> Advertisement: <<create>>\nスキャン結果として生成
-BluetoothCentralController --> "0..1" Linble: connecting
 
-Linble ..> NotificationEvent: <<create>>\nデータ受信結果として生成
-Linble -u-> "0..1" GattOperationCallback
-Linble -u-> "0..1" NotificationCallback
-
-BluetoothCentralController -r[hidden]- Linble
-
+BluetoothCentralController ..> NotificationEvent: <<create>>\nデータ受信結果として生成
 
 
 @enduml
 ```
 
-
-### UARTコマンドインタフェース
+### UART コマンドインタフェース
 
 #### コマンド側
 
@@ -819,8 +757,6 @@ noteTx .. UartCommand
 
 @enduml
 ```
-
-
 
 #### レスポンス・イベント側
 
@@ -929,8 +865,6 @@ noteRx .. UartEvent
 @enduml
 ```
 
-
-
 #### データクラス
 
 ```plantuml
@@ -957,5 +891,3 @@ enum SamplingState <<Byte>> {
 
 @enduml
 ```
-
-

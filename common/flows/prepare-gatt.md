@@ -27,7 +27,7 @@ GATTクライアントはキャラクタリスティックの`値`を変更し�
 ## GATTデータベースの検索
 
 まずは接続先LINBLEのGATTデータベース構造がどうなっているかをOSに認識させるため、サービス・キャラクタリスティック検索を行います。
-この操作によって、LINBLE側が定義するGATTサービス（`LINBLE UART Service`）へアクセスできるようになるので、それらを`Linble`オブジェクトに保持させます。
+この操作によって、LINBLE側が定義するGATTサービス（`LINBLE UART Service`）へアクセスできるようになるので、それらを`BluetoothCentralController`オブジェクトに保持させます。
 
 ![](../../out/plantuml/sequence_discover_services_and_characteristics.png)
 

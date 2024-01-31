@@ -102,10 +102,27 @@ object BluetoothLowEnergySpec {
 }
 ```
 
-4. `dataFromPeripheralCccd`の`value`に`BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE`をセットしてから、[`BluetoothGatt.writeDescriptor()`]( https://developer.android.com/reference/android/bluetooth/BluetoothGatt.html#writeDescriptor(android.bluetooth.BluetoothGattDescriptor) )を実行します。
+<div id="write-descriptor"></div>
+
+4. [`BluetoothGatt.writeDescriptor(descriptor, value)`]( https://developer.android.com/reference/android/bluetooth/BluetoothGatt#writeDescriptor(android.bluetooth.BluetoothGattDescriptor,%20byte[]) )を実行します。
+
+ただし、Android 13以降と未満で使用するメソッドが異なるので、Androidバージョンに応じて分岐する必要があります。
+
+Android 13未満では、`dataFromPeripheralCccd`の`value`に`ENABLE_NOTIFICATION_VALUE`をセットしてから、`BluetoothGatt.writeDescriptor(descriptor)`を実行します。
 
 ```kotlin
-dataFromPeripheralCccd.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+
+@Suppress("DEPRECATION")
+succeeded = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    val status = gatt.writeDescriptor(
+        dataFromPeripheralCccd,
+        BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+    )
+    status == BluetoothGatt.GATT_SUCCESS
+} else {    
+    dataFromPeripheralCccd.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+    gatt.writeDescriptor(dataFromPeripheralCccd)
+}
 
 val succeeded = gatt.writeDescriptor(dataFromPeripheralCccd)
 

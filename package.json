@@ -4,5 +4,8 @@
   "author": "Musen Connect, Inc.",
   "devDependencies": {
     "docsify-cli": "^4.3.0"
+  },
+  "scripts": {
+    "serve": "docsify serve"
   }
 }
