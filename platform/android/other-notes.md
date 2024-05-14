@@ -43,9 +43,41 @@ if (!succeeded) {
 
 ## アドバタイズのスキャン
 
-### スキャンを30分間行い続けていると、日和見スキャンモードに格下げされる
+### ScanFilterを使わないスキャンは、画面がオフになると止まる
+
+[`BluetoothLeScanner.startScan()`](https://developer.android.com/reference/android/bluetooth/le/BluetoothLeScanner#startScan(java.util.List%3Candroid.bluetooth.le.ScanFilter%3E,%20android.bluetooth.le.ScanSettings,%20android.bluetooth.le.ScanCallback))に有効な[`ScanFilter`](https://developer.android.com/reference/android/bluetooth/le/ScanFilter)リストを渡さなかった場合、画面をオフにした時に、バッテリー消費の観点からシステムによってスキャンが止められてしまいます。
+
+画面オフ時にもスキャン結果を取得したい場合は、PeripheralのAdvデータ構造に対応した`ScanFilter`を指定する必要があります。
+
+`ScanFilter`の生成には[ScanFilter.Builder](https://developer.android.com/reference/android/bluetooth/le/ScanFilter.Builder)を使用します。
+
+
+例えば、ServiceUUIDでフィルタしたい場合は、以下のようになります。
+
+```
+val scanFilters = listOf(
+            ScanFilter.Builder()
+                .setServiceUuid(ParcelUuid(UUID.fromString("ServiceUUID文字列")))
+                .build()
+        )
+```
+
+なお、
+
+```
+val scanFilters = listOf(
+           ScanFilter.Builder().build()
+        )
+```
+
+のような、フィルタ内容が具体的に定義されていないものは、有効な`ScanFilter`とみなされません。
+
+
+### スキャンを一定時間行い続けていると、日和見スキャンモードに格下げされる
 
 [`BluetoothLeScanner`]( https://developer.android.com/reference/android/bluetooth/le/BluetoothLeScanner )が日和見スキャンモード（[`ScanSettings.SCAN_MODE_OPPORTUNISTIC`]( https://developer.android.com/reference/android/bluetooth/le/ScanSettings.html#SCAN_MODE_OPPORTUNISTIC) ）に格下げされると、そのスキャナーへのアドバタイズ発見通知は基本的に発生しなくなり、他アプリがスキャンをした際についでに通知してくれる、という奇妙な動作状態になります。
+
+Android13未満では30分、Android14以降は10分で日和見スキャンモードへ移行します。
 
 長時間スキャンを行う必要があるアプリは、スキャン開始後、例えば5分に1回など、定期的にスキャン処理を再起動するようにしてください。
 
@@ -53,7 +85,7 @@ if (!succeeded) {
 
 ### スキャン開始を30秒以内に5回呼び出すとエラーになる
 
-Android7より、スキャン開始・スキャン停止を30秒以内に5回呼び出すと、そのスキャン開始が内部で失敗するようになっています。
+スキャン開始・スキャン停止を30秒以内に5回呼び出すと、そのスキャン開始が内部で失敗するようになっています。
 LogCatには以下のエラーログが記録されます（`Show only selected application`フィルタが有効になっていると表示されません。`No Filters`を選択してください）。
 
 ```

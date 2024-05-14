@@ -8,9 +8,7 @@
 > 
 > ![](../../out/plantuml/sequence_send_write_request.png)
 
-データ送信を行う場合、[BluetoothGatt.writeCharacteristic(characteristic, value, writeType)]( https://developer.android.com/reference/android/bluetooth/BluetoothGatt#writeCharacteristic(android.bluetooth.BluetoothGattCharacteristic,%20byte[],%20int) )を呼び出します。
-
-LINBLEへのデータ送信を行うためには`dataToPeripheral`キャラクタリスティックを操作すればいいので、
+LINBLEへのデータ送信を行うためには、`dataToPeripheral`キャラクタリスティックに対し`Write Without Response`操作を行います。
 
 ```kotlin
 val dataToPeripheralCharacteristic = linbleUartService.characteristics
@@ -19,24 +17,27 @@ val dataToPeripheralCharacteristic = linbleUartService.characteristics
     } ?: return
 ```
 
-で`BluetoothGattCharacteristic`オブジェクトを取り出しておき、
+のようにして`BluetoothGattCharacteristic`オブジェクトを取り出した後、Androidバージョンごとに分岐します。
+
+Android 13以降では、[BluetoothGatt.writeCharacteristic(characteristic, value, writeType)]( https://developer.android.com/reference/android/bluetooth/BluetoothGatt#writeCharacteristic(android.bluetooth.BluetoothGattCharacteristic,%20byte[],%20int) )を呼び出します。
+
+Android 13未満では、`BluetoothGattCharacteristic`オブジェクトに対して送信データとWriteTypeをセットしてから、その後[BluetoothGatt.writeCharacteristic(characteristic)]( https://developer.android.com/reference/android/bluetooth/BluetoothGatt#writeCharacteristic(android.bluetooth.BluetoothGattCharacteristic) )を呼び出します。
 
 ```kotlin
-dataToPeripheralCharacteristic.value = sendDataByteArray
-
-val succeeded = gatt.writeCharacteristic(dataToPeripheralCharacteristic)
-
 val succeeded =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         val status = gatt.writeCharacteristic(
-            dataToPeripheralCharacteristic, data, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+            dataToPeripheralCharacteristic, data, BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
         )
 
         status == BluetoothGatt.GATT_SUCCESS
     } else {
         dataToPeripheralCharacteristic.value = data
+        dataToPeripheralCharacteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
 
-        gatt.writeCharacteristic(dataToPeripheral)
+        val result = gatt.writeCharacteristic(dataToPeripheralCharacteristic)
+
+        result
     }
 
 if (!succeeded) {
@@ -44,11 +45,6 @@ if (!succeeded) {
     return
 }
 ```
-
-のように実装します。
-
-[Notification許可のコード](platform/android/prepare-gatt.md#write-descriptor)と同様に、データ送信の処理でもAndroid 13以降と未満で使用するメソッドが異なります。
-Android 13未満の場合、事前に書き込みたいデータを[BluetoothGattCharacteristic.setValue()]( https://developer.android.com/reference/android/bluetooth/BluetoothGattCharacteristic.html#setValue(byte[]) )でセットしてから[BluetoothGatt.writeCharacteristic(characteristic)]( https://developer.android.com/reference/android/bluetooth/BluetoothGatt#writeCharacteristic(android.bluetooth.BluetoothGattCharacteristic) )を呼び出します。
 
 ### セットしたデータ長がMTUを超えていた場合、超過分のデータは破棄される
 
