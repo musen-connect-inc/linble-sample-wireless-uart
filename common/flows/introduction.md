@@ -10,7 +10,7 @@
 
 ![](../../out/plantuml/classes_introduction_summary.png)
 
-`Application`は、各プラットフォームのアプリにおける、標準的なエントリポイントを指します。Androidであれば`Activity`、iOSであれば`UIViewController`、Windows10-UWPであれば`Page`などを想定しています。
+`Application`は、各プラットフォームのアプリにおける、標準的なエントリポイントを指します。Androidであれば`Activity`、iOSであれば`ContentView`、Windows10-UWPであれば`Page`などを想定しています。
 
 `Application`から`UartCommand`を生成後、それを`WirelessUartController`に渡すことで機器の制御を要求します。
 次に、それを受けた`WirelessUartController`が`BluetoothCentralController`を適切に操作して、各プラットフォームごとに用意されている`BLE API`を制御します。

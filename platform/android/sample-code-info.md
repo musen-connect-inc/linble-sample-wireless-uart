@@ -2,26 +2,28 @@
 
 {docsify-updated}
 
-本資料では、Android版サンプルコードである[linble-sample-wireless-uart-android]( https://github.com/musen-connect-inc/linble-sample-wireless-uart-android )について、その構造や要点について解説しています。
+本資料では、Android版サンプルコードである[linble-sample-wireless-uart-android](https://github.com/musen-connect-inc/linble-sample-wireless-uart-android)について、その構造や要点について解説しています。
 
-* 元となる設計情報については[BLEとLINBLEの基本制御フロー](common/flows/introduction.md)を参照してください。
+- 元となる設計情報については[BLEとLINBLEの基本制御フロー](common/flows/introduction.md)を参照してください。
 
-* サンプルコード内のコメントはBLE制御をする上で重要になること・分かりづらいところについてのみ記載しています。
+- サンプルコード内のコメントはBLE制御をする上で重要になること・分かりづらいところについてのみ記載しています。
 
-* BLE APIの使い方について紹介するのが本サンプルコードの目的となっています。Androidアプリ自体の基本的な開発方法に関しては解説は省略します。
-  * UIの構築には[Jetpack Compose](https://developer.android.com/jetpack/compose?hl=ja)を使用しています。
-  * 特に、`Acitivity`まわりには[Android Jetpack](https://developer.android.com/jetpack?hl=JA)の[ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel?hl=JA)・[MutableState](https://developer.android.com/jetpack/compose/state?hl=ja)を使用していることに注意してください。
+- BLE APIの使い方について紹介するのが本サンプルコードの目的となっています。Androidアプリ自体の基本的な開発方法に関しては解説は省略します。
 
-* 実際に参考にすべきコードは[`app/src/main/java/com.musenconnect.linble.sample.wirelessuart.android/`](https://github.com/musen-connect-inc/linble-sample-wireless-uart-android/tree/master/app/src/main/java/com/musenconnect/linble/sample/wirelessuart/android)内に配置されています。
+  - UIの構築には[Jetpack Compose](https://developer.android.com/jetpack/compose?hl=ja)を使用しています。
+  - 特に、`Acitivity`まわりには[Android Jetpack](https://developer.android.com/jetpack?hl=JA)の[ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel?hl=JA)・[MutableState](https://developer.android.com/jetpack/compose/state?hl=ja)を使用していることに注意してください。
+
+- 実際に参考にすべきコードは[`app/src/main/java/com.musenconnect.linble.sample.wirelessuart.android/`](https://github.com/musen-connect-inc/linble-sample-wireless-uart-android/tree/master/app/src/main/java/com/musenconnect/linble/sample/wirelessuart/android)内に配置されています。
 
 ## 接続対象BDアドレスの変更
 
-アプリをビルドする前に、[`WirelessUartController`クラス内の`defaultTargetLinbleAddress`の文字列]( https://github.com/musen-connect-inc/linble-sample-wireless-uart-android/blob/master/app/src/main/java/com/musenconnect/linble/sample/wirelessuart/android/common/WirelessUartController.kt#L18 )を適切に変更してください。
+アプリをビルドする前に、[`WirelessUartController`クラス内の`targetLinbleAddress`の文字列](https://github.com/musen-connect-inc/linble-sample-wireless-uart-android/blob/master/app/src/main/java/com/musenconnect/linble/sample/wirelessuart/android/model/WirelessUartController.kt#L18)を適切に変更してください。
 
 ```kotlin
 companion object {
-    val defaultTargetLinbleAddress: String = "FFFFFFFFFFFF" // `BTM` コマンドで確認できるBDアドレス文字列をここに貼り付けてください。
-        .insertColons()
+    val targetLinbleAddress: String =
+        "FFFFFFFFFFFF" // `BTM` コマンドで確認できるBDアドレス文字列をここに貼り付けてください。
+            .insertColons()
 }
 ```
 

@@ -11,7 +11,7 @@
 LINBLEへのデータ送信を行うためには、`dataToPeripheral`キャラクタリスティックに対し`Write Without Response`操作を行います。
 
 ```kotlin
-val dataToPeripheralCharacteristic = linbleUartService.characteristics
+val dataToPeripheral = linbleUartService.characteristics
     .firstOrNull { 
         it.uuid == Linble.GattUuid.dataToPeripheral
     } ?: return
@@ -27,15 +27,15 @@ Android 13未満では、`BluetoothGattCharacteristic`オブジェクトに対�
 val succeeded =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         val status = gatt.writeCharacteristic(
-            dataToPeripheralCharacteristic, data, BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+            dataToPeripheral, data, BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
         )
 
         status == BluetoothGatt.GATT_SUCCESS
     } else {
-        dataToPeripheralCharacteristic.value = data
-        dataToPeripheralCharacteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+        dataToPeripheral.value = data
+        dataToPeripheral.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
 
-        val result = gatt.writeCharacteristic(dataToPeripheralCharacteristic)
+        val result = gatt.writeCharacteristic(dataToPeripheral)
 
         result
     }

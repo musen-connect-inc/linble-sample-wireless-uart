@@ -4,3 +4,4 @@
     * [全体構造](common/classes.md)
 * 各プラットフォーム向け実装要点
     * [Android](platform/android/sample-code-info.md)
+    * [iOS](platform/ios/sample-code-info.md)

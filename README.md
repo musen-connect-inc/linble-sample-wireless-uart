@@ -10,7 +10,7 @@
 ご希望のものをローカルPC環境へクローンし、各開発環境を通じてビルド・インストールを行ってください。
 
 * [Android]( https://github.com/musen-connect-inc/linble-sample-wireless-uart-android )
-* iOS(公開時期未定)
+* [iOS]( https://github.com/musen-connect-inc/linble-sample-wireless-uart-ios )
 * Windows10-UWP(公開時期未定)
 
 ## サンプルコードの解説

@@ -49,7 +49,7 @@ interface Linble {
 のように実装できます。
 
 Notification許可をしたいのは`dataFromPeripheral`に関する`BluetoothGattCharacteristic`です。
-Kotlinのコレクション操作関数[`firstOrNull()`]( https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first-or-null.html )を使えば、`dataFromPeripheralCharacteristic`の取り出しは
+Kotlinのコレクション操作関数[`firstOrNull()`]( https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first-or-null.html )を使えば、`dataFromPeripheral`の取り出しは
 
 ```kotlin
 val linbleUartService = gatt.services
@@ -57,7 +57,7 @@ val linbleUartService = gatt.services
         it.uuid == Linble.GattUuid.linbleUartService
     } ?: return
 
-val dataFromPeripheralCharacteristic = linbleUartService.characteristics
+val dataFromPeripheral = linbleUartService.characteristics
     .firstOrNull { 
         it.uuid == Linble.GattUuid.dataFromPeripheral 
     } ?: return
@@ -65,11 +65,11 @@ val dataFromPeripheralCharacteristic = linbleUartService.characteristics
 
 のように書けます。
 
-2. 取り出した`dataFromPeripheralCharacteristic`を使って、[`BluetoothGatt.setCharacteristicNotification()`]( https://developer.android.com/reference/android/bluetooth/BluetoothGatt#setCharacteristicNotification(android.bluetooth.BluetoothGattCharacteristic,%20boolean) )を実行します。
+2. 取り出した`dataFromPeripheral`を使って、[`BluetoothGatt.setCharacteristicNotification()`]( https://developer.android.com/reference/android/bluetooth/BluetoothGatt#setCharacteristicNotification(android.bluetooth.BluetoothGattCharacteristic,%20boolean) )を実行します。
 
 ```kotlin
 val succeeded = gatt
-    .setCharacteristicNotification(dataFromPeripheralCharacteristic, true)
+    .setCharacteristicNotification(dataFromPeripheral, true)
 
 if (!succeeded) {
     // TODO: 失敗時の処理
@@ -79,10 +79,10 @@ if (!succeeded) {
 
 これによって、Android OSがこのキャラクタリスティックから発生したNotificationを受け取ったとき、このアプリにイベントを横流ししてくれるようになります。
 
-3. `dataFromPeripheralCharacteristic`から、*Client Characteristic Configuration Descriptor（通称CCCD）*についての[`BluetoothGattDescriptor`]( https://developer.android.com/reference/android/bluetooth/BluetoothGattDescriptor )オブジェクトを取得します。
+3. `dataFromPeripheral`から、*Client Characteristic Configuration Descriptor（通称CCCD）*についての[`BluetoothGattDescriptor`]( https://developer.android.com/reference/android/bluetooth/BluetoothGattDescriptor )オブジェクトを取得します。
 
 ```kotlin
-val dataFromPeripheralCccd = dataFromPeripheralCharacteristic
+val dataFromPeripheralCccd = dataFromPeripheral
         .getDescriptor(BluetoothLowEnergySpec.GattUuid.cccd) ?: return
 ```
 
@@ -111,9 +111,8 @@ object BluetoothLowEnergySpec {
 Android 13未満では、`dataFromPeripheralCccd`の`value`に`ENABLE_NOTIFICATION_VALUE`をセットしてから、`BluetoothGatt.writeDescriptor(descriptor)`を実行します。
 
 ```kotlin
-
 @Suppress("DEPRECATION")
-succeeded = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+val succeeded = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     val status = gatt.writeDescriptor(
         dataFromPeripheralCccd,
         BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
@@ -123,8 +122,6 @@ succeeded = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     dataFromPeripheralCccd.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
     gatt.writeDescriptor(dataFromPeripheralCccd)
 }
-
-val succeeded = gatt.writeDescriptor(dataFromPeripheralCccd)
 
 if (!succeeded) {
     // TODO: 失敗時の処理
