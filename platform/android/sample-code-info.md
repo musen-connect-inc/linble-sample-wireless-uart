@@ -17,7 +17,7 @@
 
 ## 接続対象BDアドレスの変更
 
-アプリをビルドする前に、[`WirelessUartController`クラス内の`targetLinbleAddress`の文字列](https://github.com/musen-connect-inc/linble-sample-wireless-uart-android/blob/master/app/src/main/java/com/musenconnect/linble/sample/wirelessuart/android/model/WirelessUartController.kt#L18)を適切に変更してください。
+アプリをビルドする前に、[`WirelessUartController`クラス内の`targetLinbleAddress`の文字列](https://github.com/musen-connect-inc/linble-sample-wireless-uart-android/blob/master/app/src/main/java/com/musenconnect/linble/sample/wirelessuart/android/model/WirelessUartController.kt#L21)を適切に変更してください。
 
 ```kotlin
 companion object {

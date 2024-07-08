@@ -2,7 +2,7 @@
 
 {docsify-updated}
 
-アプリを起動させると、`MainActivity`が立ち上がり、Android OSから`onCreate()`や`onStart()`がコールされます。
+アプリを起動させると、`MainActivity`が立ち上がり、Android OSから`onCreate()`がコールされます。
 
 `onCreate()`時、`MainActivityViewModel`内の`RuntimePermissionHandler`によって、その時点の[Runtime Permission]( #runtime-permission取得 )の付与状況の確認が行われます。
 
